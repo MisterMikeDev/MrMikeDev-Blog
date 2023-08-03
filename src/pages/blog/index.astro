@@ -89,6 +89,7 @@ const posts = (await getCollection('blog')).sort(
 		<Header />
 		<main>
 			<section>
+				<h2 class="text-4xl font-bold text-center my-5">Ultimo post:</h2>
 				<ul>
 					{
 						posts.map((post) => (
