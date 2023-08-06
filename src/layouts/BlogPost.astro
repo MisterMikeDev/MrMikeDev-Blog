@@ -29,7 +29,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				box-shadow: var(--box-shadow);
 			}
 			.prose {
-				width: 720px;
+				width: 850px;
 				max-width: calc(100% - 2em);
 				margin: auto;
 				padding: 1em;
@@ -83,3 +83,65 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<Footer />
 	</body>
 </html>
+<script>
+	enum LANGS {
+		html = "HTML",
+		css = "CSS",
+		json = "JSON",
+		js = "JavaScript",
+		ts = "TypeScript",
+		jsx = "React",
+		tsx = "ReactTypeScript",
+		bash = "Bash",
+		sql = "SQL",
+		md = "Markdown",
+		astro = "Astro",
+		yaml = "Yaml",
+		unknown = "Unknown"
+	}
+
+	const postContent = document.querySelector(".prose");
+
+	const postContentChildrens = postContent?.childNodes;
+	
+	const childrenArray = [] as ChildNode[];
+
+	const codeCouples = [] as Array<{
+		lang: number;
+		code: number;
+	}>
+
+	postContentChildrens?.forEach(el => 
+		childrenArray.push(el)
+	)
+
+	childrenArray?.forEach((el, index) => {
+		if (el.nodeName === "PRE") {
+			codeCouples.push({
+				lang: index - 2,
+				code: index
+			})
+		}
+	})
+
+	codeCouples.forEach(couple => {
+		const lang = childrenArray[couple.lang];
+		const code = childrenArray[couple.code];
+		const langText = lang.textContent as string;
+		lang.remove()
+		if (typeof langText === "string") {
+			const icon = LANGS[langText as keyof typeof LANGS]  || LANGS.unknown;
+			const iconPath = `/icons/${icon}.svg`
+			const iconImg = document.createElement("img")
+			iconImg.src = iconPath
+			iconImg.alt = `Icon from ${icon} lang for the code.`
+			iconImg.draggable = false
+			iconImg.style.position = "absolute";
+			iconImg.style.top = "0.5rem";
+			iconImg.style.right = "0.5rem";
+			iconImg.style.width = "3rem";
+			iconImg.style.height = "auto";
+			code.appendChild(iconImg)
+		}
+	})
+</script>
